@@ -43,6 +43,8 @@ dependencies {
     // Step 1: Add dependency of recycler view
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
+    implementation 'com.squareup.retrofit:retrofit:1.9.0' // dependency for Retrofit
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

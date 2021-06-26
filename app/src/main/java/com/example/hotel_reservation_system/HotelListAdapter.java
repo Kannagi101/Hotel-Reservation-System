@@ -10,14 +10,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class HotelListAdapter extends RecyclerView.Adapter<HotelListAdapter.ViewHolder> {
 
-    private ArrayList<HotelListData> hotelListData;
+    private List<HotelListData> hotelListData;
     private LayoutInflater layoutInflater;
 
     //Data gets passed in the constructor
-    HotelListAdapter(Context context, ArrayList<HotelListData> hotelListData){
+    HotelListAdapter(Context context, List<HotelListData> hotelListData){
       this.layoutInflater = LayoutInflater.from(context);
       this.hotelListData = hotelListData;
     }
@@ -31,7 +32,7 @@ public class HotelListAdapter extends RecyclerView.Adapter<HotelListAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull HotelListAdapter.ViewHolder holder, int position) {
-        String hotelName = hotelListData.get(position).getHotelName();
+        String hotelName = hotelListData.get(position).getHotel_name();
         String hotelPrice = hotelListData.get(position).getPrice();
         String hotelAvailability = hotelListData.get(position).getAvailability();
 

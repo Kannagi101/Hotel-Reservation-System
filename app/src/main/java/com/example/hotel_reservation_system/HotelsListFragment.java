@@ -4,7 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,11 +16,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class HotelsListFragment extends Fragment {
 
     View view;
     TextView headingTextView;
+    ProgressBar progressBar;
+    List<HotelListData> userListResponseData;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,6 +43,7 @@ public class HotelsListFragment extends Fragment {
 
         //heading text view
         headingTextView = view.findViewById(R.id.heading_text_view);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         String checkInDate = getArguments().getString("check in date");
         String checkOutDate = getArguments().getString("check out date");
@@ -44,11 +55,12 @@ public class HotelsListFragment extends Fragment {
 
 
         // Set up the RecyclerView
-        ArrayList<HotelListData> hotelListData = initHotelListData();
-        RecyclerView recyclerView = view.findViewById(R.id.hotel_list_recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        HotelListAdapter hotelListAdapter= new HotelListAdapter(getActivity(), hotelListData);
-        recyclerView.setAdapter(hotelListAdapter);
+//        ArrayList<HotelListData> hotelListData = initHotelListData();
+//        RecyclerView recyclerView = view.findViewById(R.id.hotel_list_recyclerView);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        HotelListAdapter hotelListAdapter = new HotelListAdapter(getActivity(), hotelListData);
+//        recyclerView.setAdapter(hotelListAdapter);
+        getHotelsListsData();
     }
 
     public ArrayList<HotelListData> initHotelListData() {
@@ -64,5 +76,32 @@ public class HotelsListFragment extends Fragment {
         list.add(new HotelListData("San Jones", "250$", "false"));
 
         return list;
+    }
+
+    private void getHotelsListsData() {
+
+        progressBar.setVisibility(View.VISIBLE);
+        Api.getClient().getHotelsLists(new Callback<List<HotelListData>>() {
+            @Override
+            public void success(List<HotelListData> userListResponses, Response response) {
+                // in this method we will get the response from API
+                userListResponseData = userListResponses;
+                // Set up the RecyclerView
+
+                progressBar.setVisibility(View.GONE);
+                RecyclerView recyclerView = view.findViewById(R.id.hotel_list_recyclerView);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                HotelListAdapter hotelListAdapter = new HotelListAdapter(getActivity(), userListResponseData);
+                recyclerView.setAdapter(hotelListAdapter);
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                // if error occurs in network transaction then we can get the error in this method.
+                Toast.makeText(getActivity(), error.toString(), Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 }
