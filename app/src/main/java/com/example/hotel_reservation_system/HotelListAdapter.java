@@ -12,15 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit.Callback;
+
 public class HotelListAdapter extends RecyclerView.Adapter<HotelListAdapter.ViewHolder> {
 
     private List<HotelListData> hotelListData;
     private LayoutInflater layoutInflater;
+    private ItemClickListener clickListener;
 
     //Data gets passed in the constructor
-    HotelListAdapter(Context context, List<HotelListData> hotelListData){
-      this.layoutInflater = LayoutInflater.from(context);
-      this.hotelListData = hotelListData;
+    HotelListAdapter(Context context, List<HotelListData> hotelListData) {
+        this.layoutInflater = LayoutInflater.from(context);
+        this.hotelListData = hotelListData;
     }
 
     @NonNull
@@ -51,17 +54,30 @@ public class HotelListAdapter extends RecyclerView.Adapter<HotelListAdapter.View
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.clickListener = itemClickListener;
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView hotelName, hotelPrice, hotelAvailability;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             hotelName = itemView.findViewById(R.id.hotel_name_text_view);
             hotelPrice = itemView.findViewById(R.id.price_text_view);
             hotelAvailability = itemView.findViewById(R.id.availability_text_view);
 
+            itemView.setOnClickListener(this);
+
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (clickListener != null)
+                clickListener.onClick(view, getAbsoluteAdapterPosition());
         }
     }
+
 }
-
-
